@@ -1,6 +1,6 @@
 {
-  "name": "Jason_demo",
-  "id": "jason_demo",
+  "name": "Jasondemo",
+  "id": "jasondemo",
   "version": "1.0.0",
   "description": "Write user risk scores.",
   "type": ["user"],
