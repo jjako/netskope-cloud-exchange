@@ -8,6 +8,7 @@ import base64
 import hashlib
 import hmac
 import uuid
+import json
 
 from datetime import datetime
 
@@ -220,49 +221,9 @@ class jasonPlugin(PluginBase):
         Returns:
             List: List of all the users.
         """
-        rec = []
-        endpoint = "/api/awareness-training/company/get-safe-score-details"
-        pageSize = 100
-        nextPageToken = ""
-        request_url, headers = self._get_auth_headers(
-            self.configuration, endpoint
-        )
-        body = {
-            "meta": {
-                "pagination": {
-                    "pageSize": pageSize,
-                    "pageToken": nextPageToken,
-                }
-            }
-        }
-        while True:
-            response = requests.post(
-                url=request_url,
-                headers=headers,
-                data=str(body),
-                proxies=self.proxy,
-            )
-            response = self.handle_error(response, action)
-            failures = response.get("fail", [])
-            if failures:
-                error = ", ".join(self._parse_errors(failures))
-                self.logger.error(
-                    "Plugin: jason CRE, Unable to fetch users, "
-                    f"Error: {error}"
-                )
-                raise HTTPError(
-                    "Plugin: jason CRE, Unable to fetch users, "
-                    f"Error: {error}"
-                )
-            records = response.get("data", [])
-            rec += records
-            nextPage = (
-                response.get("meta", {}).get("pagination", {}).get("next", "")
-            )
-            if nextPage:
-                body["meta"]["pagination"]["pageToken"] = nextPage
-            else:
-                break
+        myrecord = {'emailAddress':'homer@v1demo.onmicrosoft.com', 'name': 'Homer Sampson', 'department':'IT-Dept', 'risk':'C', 'humanError':'', 'sentiment':'C', 'engagement':'C', 'knowledge':'C' }
+        rec = json.dumps(myrecord, indent=4)
+
         return rec
 
     def _find_user_by_email(self, users: List, email: str) -> Optional[Dict]:
